@@ -45,6 +45,7 @@ services:
   vscode:
     image: codercom/code-server:latest
     container_name: vscode_php_native_jwt_tasks
+    user: "root"
     ports:
       - 3434:8080
     environment:
