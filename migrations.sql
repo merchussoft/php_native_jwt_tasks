@@ -1,0 +1,27 @@
+CREATE DATABASE IF NOT EXISTS php_native_jwt_tasks CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE php_native_jwt_tasks;
+
+CREATE TABLE users (
+  cod_user INT AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE refresh_tokens (
+  cod_refresh_token INT AUTO_INCREMENT PRIMARY KEY,
+  cod_user INT NOT NULL,
+  token VARCHAR(255) NOT NULL,
+  expires_at DATETIME NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (cod_user) REFERENCES users(cod_user) ON DELETE CASCADE
+);
+
+CREATE TABLE tasks (
+  task INT AUTO_INCREMENT PRIMARY KEY,
+  cod_user INT NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  done TINYINT(1) DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (cod_user) REFERENCES users(cod_user) ON DELETE CASCADE
+);

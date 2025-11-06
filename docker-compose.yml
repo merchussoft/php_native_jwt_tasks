@@ -1,0 +1,61 @@
+version: '3.8'
+services:
+  app:
+    image: php:8.2-apache
+    container_name: php_native_jwt_tasks
+    volumes:
+      - ./public:/var/www/html
+      - ./src:/var/www/src
+      - ./vendor:/var/www/vendor
+    ports:
+      - "8585:80"
+    working_dir: /var/www
+    depends_on:
+      - db
+    environment:
+      - JWT_SECRET=supersecretkey_change_this
+      - DB_HOST=db
+      - DB_NAME=php_native_jwt_tasks
+      - DB_USER=root
+      - DB_PASS=rootpass
+      - DB_PORT=8383
+
+  db:
+    image: mysql:8.0
+    container_name: db_php_native_jwt_tasks
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./migrations.sql:/docker-entrypoint-initdb.d/migrations.sql
+    ports:
+      - 8383:3306
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: admin_db_php_native_jwt_tasks
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: rootpass
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+  
+  vscode:
+    image: codercom/code-server:latest
+    container_name: vscode_php_native_jwt_tasks
+    ports:
+      - 3434:8080
+    environment:
+      - PASSWORD=4nm3r403
+      - TZ=America/Bogota
+    volumes:
+      - .:/home/coder
+      - ./vscode_php/config:/home/coder/.config
+      - ./vscode_php/extensions:/home/coder/.local/share/code-server/extensions
+    restart: unless-stopped
+    working_dir: /var/www
+volumes:
+  db_data:
