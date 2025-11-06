@@ -38,7 +38,7 @@ services:
       PMA_USER: root
       PMA_PASSWORD: rootpass
     ports:
-      - "8585:80"
+      - "8185:80"
     depends_on:
       - db
   
