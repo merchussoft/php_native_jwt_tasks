@@ -1,16 +1,17 @@
 services:
   app:
-    image: php:8.2-apache
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     container_name: php_native_jwt_tasks
     volumes:
-      - ./public:/var/www/html
-      - ./src:/var/www/src
-      - ./vendor:/var/www/vendor
+      - .:/var/www/html
     ports:
       - "8585:80"
     working_dir: /var/www
     depends_on:
-      - db
+      - db:
+        condition: service_healthy
     environment:
       - JWT_SECRET=supersecretkey_change_this
       - DB_HOST=db
@@ -18,6 +19,8 @@ services:
       - DB_USER=root
       - DB_PASS=rootpass
       - DB_PORT=8383
+    networks:
+      - network_php_native_jwt_tasks
 
   db:
     image: mysql:8.0
@@ -29,6 +32,14 @@ services:
       - ./migrations.sql:/docker-entrypoint-initdb.d/migrations.sql
     ports:
       - 8383:3306
+    command: [ 'mysqld', '--default-authentication-plugin=mysql_native_password', '--bind-address=0.0.0.0']
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      retries: 10
+      start_period: 60s  # ⬆ Aumentado a 30s
+    networks:
+      - network_php_native_jwt_tasks
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -40,7 +51,10 @@ services:
     ports:
       - "8185:80"
     depends_on:
-      - db
+      - db::
+        condition: service_healthy
+    networks:
+      - network_php_native_jwt_tasks
   
   vscode:
     image: codercom/code-server:latest
@@ -59,5 +73,11 @@ services:
       - ./vscode_php/extensions:/home/coder/.local/share/code-server/extensions
     restart: unless-stopped
     working_dir: /var/www
+    networks:
+      - network_php_native_jwt_tasks
 volumes:
-  db_data:
+  db_data: {}
+
+networks:
+  network_php_native_jwt_tasks:
+    external: true 
