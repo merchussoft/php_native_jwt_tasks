@@ -74,6 +74,7 @@ services:
       - network_php_native_jwt_tasks
 volumes:
   db_data: {}
+  vscode_php: {}
 
 networks:
   network_php_native_jwt_tasks:
