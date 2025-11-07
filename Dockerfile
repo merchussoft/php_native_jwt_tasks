@@ -6,10 +6,10 @@ WORKDIR /var/www
 ## Instalar dependencias
 RUN apt update && apt dist-upgrade -y && apt update
 
-RUN apt install unzip curl libpng-dev libjpeg-dev libfreetype6-dev
+RUN apt install unzip curl libpng-dev libjpeg-dev libfreetype6-dev -y
 
 # Extensiones de php (pdo_mysql y gb)
-RUN docker-php-ext-install pdo pdo_mysql gd
+RUN docker-php-ext-install pdo pdo_mysql gd -y
 
 
 # Instalar Composer globalmente 
