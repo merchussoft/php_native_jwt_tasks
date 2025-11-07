@@ -15,6 +15,10 @@ RUN apt update && apt dist-upgrade -y && apt install -y \
 # Habilitar mod_rewrite para URLs amigables
 RUN a2enmod rewrite
 
+# 👉 Configurar Apache para que DocumentRoot sea /public
+RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
+ && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/apache2.conf
+
 # Configurar Apache para permitir .htaccess
 RUN sed -i 's|AllowOverride None|AllowOverride All|g' /etc/apache2/apache2.conf
 
