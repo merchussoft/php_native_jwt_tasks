@@ -9,7 +9,7 @@ RUN apt update && apt dist-upgrade -y && apt update
 RUN apt install unzip curl libpng-dev libjpeg-dev libfreetype6-dev -y
 
 # Extensiones de php (pdo_mysql y gb)
-RUN docker-php-ext-install pdo pdo_mysql gd -y
+RUN docker-php-ext-install pdo pdo_mysql gd
 
 
 # Instalar Composer globalmente 
