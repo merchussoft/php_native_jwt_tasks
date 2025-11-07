@@ -8,7 +8,6 @@ services:
       - .:/var/www/html
     ports:
       - "8585:80"
-    working_dir: /var/www
     depends_on:
       db:
         condition: service_healthy
@@ -70,7 +69,7 @@ services:
       - ./vscode_php/config:/home/coder/.config
       - ./vscode_php/extensions:/home/coder/.local/share/code-server/extensions
     restart: unless-stopped
-    working_dir: /var/www
+    working_dir: /var/www/html
     networks:
       - network_php_native_jwt_tasks
 volumes:
